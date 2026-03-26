@@ -1,0 +1,61 @@
+{% extends 'incidents/base.html' %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Incident Dashboard</h2>
+
+    <a href="/create/" class="btn btn-primary">
+        ➕ Report Incident
+    </a>
+</div>
+
+{% if incidents %}
+<div class="row">
+
+{% for incident in incidents %}
+<div class="col-md-6">
+    <div class="card mb-3 shadow-sm">
+
+        <div class="card-body">
+
+            <h5 class="card-title">
+                {{ incident.title }}
+            </h5>
+
+            <p class="card-text">
+                {{ incident.description }}
+            </p>
+
+            <span class="badge bg-danger">
+                {{ incident.severity }}
+            </span>
+
+            <p class="mt-2">
+                📍 {{ incident.location }} <br>
+                👤 {{ incident.reported_by }} <br>
+                🕒 {{ incident.created_at }}
+            </p>
+
+            <a href="/update/{{ incident.id }}/" class="btn btn-warning btn-sm">
+                Edit
+            </a>
+
+            <a href="/delete/{{ incident.id }}/" class="btn btn-danger btn-sm">
+                Delete
+            </a>
+
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+</div>
+
+{% else %}
+<div class="alert alert-info">
+    No incidents reported yet.
+</div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'incidents/base.html' %}
+
+{% block content %}
+
+<h2>Edit Incident</h2>
+
+<form method="post" class="card p-4 shadow-sm">
+    {% csrf_token %}
+
+    <input type="text" name="title" class="form-control mb-3"
+           value="{{ incident.title }}">
+
+    <textarea name="description" class="form-control mb-3">
+        {{ incident.description }}
+    </textarea>
+
+    <select name="severity" class="form-select mb-3">
+        <option {% if incident.severity == 'Low' %}selected{% endif %}>Low</option>
+        <option {% if incident.severity == 'Medium' %}selected{% endif %}>Medium</option>
+        <option {% if incident.severity == 'High' %}selected{% endif %}>High</option>
+        <option {% if incident.severity == 'Critical' %}selected{% endif %}>Critical</option>
+    </select>
+
+    <input type="text" name="location" class="form-control mb-3"
+           value="{{ incident.location }}">
+
+    <input type="text" name="reported_by" class="form-control mb-3"
+           value="{{ incident.reported_by }}">
+
+    <button class="btn btn-warning">
+        Update Incident
+    </button>
+
+</form>
+
+{% endblock %}

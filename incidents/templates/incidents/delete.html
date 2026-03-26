@@ -1,0 +1,23 @@
+{% extends 'incidents/base.html' %}
+
+{% block content %}
+
+<div class="card p-4 shadow-sm text-center">
+
+    <h3>Delete Incident</h3>
+
+    <p>Are you sure you want to delete:</p>
+
+    <h5>{{ incident.title }}</h5>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <button class="btn btn-danger">
+            Yes, Delete
+        </button>
+    </form>
+
+</div>
+
+{% endblock %}
