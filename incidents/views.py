@@ -1,25 +1,20 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Incident
 
 
-def dashboard(request):
+def index(request):
     incidents = Incident.objects.all().order_by('-created_at')
 
-    p1_count = Incident.objects.filter(priority='P1').count()
-    p2_count = Incident.objects.filter(priority='P2').count()
-    p3_count = Incident.objects.filter(priority='P3').count()
-    p4_count = Incident.objects.filter(priority='P4').count()
-
-    resolved_count = Incident.objects.filter(status='RESOLVED').count()
-
-    return render(request, 'incidents/dashboard.html', {
+    context = {
         'incidents': incidents,
-        'p1_count': p1_count,
-        'p2_count': p2_count,
-        'p3_count': p3_count,
-        'p4_count': p4_count,
-        'resolved_count': resolved_count,
-    })
+        'p1': incidents.filter(priority='P1').count(),
+        'p2': incidents.filter(priority='P2').count(),
+        'p3': incidents.filter(priority='P3').count(),
+        'p4': incidents.filter(priority='P4').count(),
+        'resolved': incidents.filter(status='RESOLVED').count(),
+    }
+
+    return render(request, 'incidents/index.html', context)
 
 
 def create_incident(request):
@@ -27,11 +22,33 @@ def create_incident(request):
         Incident.objects.create(
             title=request.POST['title'],
             description=request.POST['description'],
-            location=request.POST['location'],
-            reported_by=request.POST['reported_by'],
             priority=request.POST['priority'],
             status=request.POST['status']
         )
-        return redirect('dashboard')
+        return redirect('index')
 
     return render(request, 'incidents/create.html')
+
+
+def update_incident(request, id):
+    incident = get_object_or_404(Incident, id=id)
+
+    if request.method == 'POST':
+        incident.title = request.POST['title']
+        incident.description = request.POST['description']
+        incident.priority = request.POST['priority']
+        incident.status = request.POST['status']
+        incident.save()
+        return redirect('index')
+
+    return render(request, 'incidents/update.html', {'incident': incident})
+
+
+def delete_incident(request, id):
+    incident = get_object_or_404(Incident, id=id)
+
+    if request.method == 'POST':
+        incident.delete()
+        return redirect('index')
+
+    return render(request, 'incidents/delete.html', {'incident': incident})

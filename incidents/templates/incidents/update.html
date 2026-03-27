@@ -1,36 +1,26 @@
 {% extends 'incidents/base.html' %}
 
 {% block content %}
+<h2>Update Incident</h2>
 
-<h2>Edit Incident</h2>
-
-<form method="post" class="card p-4 shadow-sm">
+<form method="POST">
     {% csrf_token %}
 
-    <input type="text" name="title" class="form-control mb-3"
-           value="{{ incident.title }}">
+    <input type="text" name="title" value="{{ incident.title }}" class="form-control mb-2">
+    <textarea name="description" class="form-control mb-2">{{ incident.description }}</textarea>
 
-    <textarea name="description" class="form-control mb-3">
-        {{ incident.description }}
-    </textarea>
-
-    <select name="severity" class="form-select mb-3">
-        <option {% if incident.severity == 'Low' %}selected{% endif %}>Low</option>
-        <option {% if incident.severity == 'Medium' %}selected{% endif %}>Medium</option>
-        <option {% if incident.severity == 'High' %}selected{% endif %}>High</option>
-        <option {% if incident.severity == 'Critical' %}selected{% endif %}>Critical</option>
+    <select name="priority" class="form-control mb-2">
+        <option value="P1" {% if incident.priority == 'P1' %}selected{% endif %}>Critical</option>
+        <option value="P2" {% if incident.priority == 'P2' %}selected{% endif %}>High</option>
+        <option value="P3" {% if incident.priority == 'P3' %}selected{% endif %}>Medium</option>
+        <option value="P4" {% if incident.priority == 'P4' %}selected{% endif %}>Low</option>
     </select>
 
-    <input type="text" name="location" class="form-control mb-3"
-           value="{{ incident.location }}">
+    <select name="status" class="form-control mb-2">
+        <option value="OPEN" {% if incident.status == 'OPEN' %}selected{% endif %}>Open</option>
+        <option value="RESOLVED" {% if incident.status == 'RESOLVED' %}selected{% endif %}>Resolved</option>
+    </select>
 
-    <input type="text" name="reported_by" class="form-control mb-3"
-           value="{{ incident.reported_by }}">
-
-    <button class="btn btn-warning">
-        Update Incident
-    </button>
-
+    <button class="btn btn-primary">Update</button>
 </form>
-
 {% endblock %}

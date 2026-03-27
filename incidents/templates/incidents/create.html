@@ -1,53 +1,26 @@
-{% extends 'base.html' %}
+{% extends 'incidents/base.html' %}
 
 {% block content %}
+<h2>Create Incident</h2>
 
-<div class="container mt-4">
-    <h2>Create Incident</h2>
+<form method="POST">
+    {% csrf_token %}
 
-    <form method="POST">
-        {% csrf_token %}
+    <input type="text" name="title" placeholder="Title" class="form-control mb-2" required>
+    <textarea name="description" placeholder="Description" class="form-control mb-2" required></textarea>
 
-        <div class="mb-3">
-            <label>Title</label>
-            <input type="text" name="title" class="form-control" required>
-        </div>
+    <select name="priority" class="form-control mb-2">
+        <option value="P1">Critical</option>
+        <option value="P2">High</option>
+        <option value="P3">Medium</option>
+        <option value="P4">Low</option>
+    </select>
 
-        <div class="mb-3">
-            <label>Description</label>
-            <textarea name="description" class="form-control" required></textarea>
-        </div>
+    <select name="status" class="form-control mb-2">
+        <option value="OPEN">Open</option>
+        <option value="RESOLVED">Resolved</option>
+    </select>
 
-        <div class="mb-3">
-            <label>Location</label>
-            <input type="text" name="location" class="form-control" required>
-        </div>
-
-        <div class="mb-3">
-            <label>Reported By</label>
-            <input type="text" name="reported_by" class="form-control" required>
-        </div>
-
-        <div class="mb-3">
-            <label>Priority</label>
-            <select name="priority" class="form-control">
-                <option value="P1">Critical</option>
-                <option value="P2">High</option>
-                <option value="P3" selected>Medium</option>
-                <option value="P4">Low</option>
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label>Status</label>
-            <select name="status" class="form-control">
-                <option value="OPEN">Open</option>
-                <option value="RESOLVED">Resolved</option>
-            </select>
-        </div>
-
-        <button class="btn btn-primary">Submit</button>
-    </form>
-</div>
-
+    <button class="btn btn-success">Create</button>
+</form>
 {% endblock %}
