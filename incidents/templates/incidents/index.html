@@ -1,61 +1,89 @@
-{% extends 'incidents/base.html' %}
+{% extends 'base.html' %}
 
 {% block content %}
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>Incident Dashboard</h2>
+<div class="container mt-4">
 
-    <a href="/create/" class="btn btn-primary">
-        ➕ Report Incident
-    </a>
-</div>
+    <h2 class="mb-4">Incident Dashboard</h2>
 
-{% if incidents %}
-<div class="row">
+    <!-- COUNT CARDS -->
+    <div class="row mb-4 text-center">
 
-{% for incident in incidents %}
-<div class="col-md-6">
-    <div class="card mb-3 shadow-sm">
-
-        <div class="card-body">
-
-            <h5 class="card-title">
-                {{ incident.title }}
-            </h5>
-
-            <p class="card-text">
-                {{ incident.description }}
-            </p>
-
-            <span class="badge bg-danger">
-                {{ incident.severity }}
-            </span>
-
-            <p class="mt-2">
-                📍 {{ incident.location }} <br>
-                👤 {{ incident.reported_by }} <br>
-                🕒 {{ incident.created_at }}
-            </p>
-
-            <a href="/update/{{ incident.id }}/" class="btn btn-warning btn-sm">
-                Edit
-            </a>
-
-            <a href="/delete/{{ incident.id }}/" class="btn btn-danger btn-sm">
-                Delete
-            </a>
-
+        <div class="col-md-2">
+            <div class="card text-white bg-danger p-3">
+                <h6>P1 - Critical</h6>
+                <h2>{{ p1_count }}</h2>
+            </div>
         </div>
+
+        <div class="col-md-2">
+            <div class="card text-white p-3" style="background-color:#fd7e14;">
+                <h6>P2 - High</h6>
+                <h2>{{ p2_count }}</h2>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="card text-dark p-3" style="background-color:#ffc107;">
+                <h6>P3 - Medium</h6>
+                <h2>{{ p3_count }}</h2>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="card text-white bg-primary p-3">
+                <h6>P4 - Low</h6>
+                <h2>{{ p4_count }}</h2>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="card text-white bg-success p-3">
+                <h6>Resolved</h6>
+                <h2>{{ resolved_count }}</h2>
+            </div>
+        </div>
+
     </div>
-</div>
-{% endfor %}
+
+    <!-- INCIDENT LIST -->
+    {% for incident in incidents %}
+    <div class="card mb-3 p-3">
+
+        <h5>{{ incident.title }}</h5>
+        <p>{{ incident.description }}</p>
+
+        <!-- PRIORITY BADGE -->
+        <span class="badge 
+            {% if incident.priority == 'P1' %}bg-danger
+            {% elif incident.priority == 'P2' %}" style="background-color:#fd7e14;"
+            {% elif incident.priority == 'P3' %}" style="background-color:#ffc107; color:black;"
+            {% elif incident.priority == 'P4' %}bg-primary
+            {% endif %}
+        ">
+            {{ incident.get_priority_display }}
+        </span>
+
+        <!-- STATUS BADGE -->
+        <span class="badge 
+            {% if incident.status == 'RESOLVED' %}bg-success
+            {% else %}bg-secondary
+            {% endif %}
+        ">
+            {{ incident.status }}
+        </span>
+
+        <p class="mt-2">
+            📍 {{ incident.location }} |
+            👤 {{ incident.reported_by }} |
+            🕒 {{ incident.created_at }}
+        </p>
+
+    </div>
+    {% empty %}
+        <p>No incidents reported yet.</p>
+    {% endfor %}
 
 </div>
-
-{% else %}
-<div class="alert alert-info">
-    No incidents reported yet.
-</div>
-{% endif %}
 
 {% endblock %}

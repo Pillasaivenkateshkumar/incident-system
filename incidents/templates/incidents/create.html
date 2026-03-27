@@ -1,46 +1,53 @@
-{% extends 'incidents/base.html' %}
+{% extends 'base.html' %}
 
 {% block content %}
 
-<h2>Report New Incident</h2>
+<div class="container mt-4">
+    <h2>Create Incident</h2>
 
-<form method="post" class="card p-4 shadow-sm">
-    {% csrf_token %}
+    <form method="POST">
+        {% csrf_token %}
 
-    <div class="mb-3">
-        <label class="form-label">Title</label>
-        <input type="text" name="title" class="form-control" required>
-    </div>
+        <div class="mb-3">
+            <label>Title</label>
+            <input type="text" name="title" class="form-control" required>
+        </div>
 
-    <div class="mb-3">
-        <label class="form-label">Description</label>
-        <textarea name="description" class="form-control" required></textarea>
-    </div>
+        <div class="mb-3">
+            <label>Description</label>
+            <textarea name="description" class="form-control" required></textarea>
+        </div>
 
-    <div class="mb-3">
-        <label class="form-label">Severity</label>
-        <select name="severity" class="form-select">
-            <option>Low</option>
-            <option>Medium</option>
-            <option>High</option>
-            <option>Critical</option>
-        </select>
-    </div>
+        <div class="mb-3">
+            <label>Location</label>
+            <input type="text" name="location" class="form-control" required>
+        </div>
 
-    <div class="mb-3">
-        <label class="form-label">Location</label>
-        <input type="text" name="location" class="form-control" required>
-    </div>
+        <div class="mb-3">
+            <label>Reported By</label>
+            <input type="text" name="reported_by" class="form-control" required>
+        </div>
 
-    <div class="mb-3">
-        <label class="form-label">Reported By</label>
-        <input type="text" name="reported_by" class="form-control" required>
-    </div>
+        <div class="mb-3">
+            <label>Priority</label>
+            <select name="priority" class="form-control">
+                <option value="P1">Critical</option>
+                <option value="P2">High</option>
+                <option value="P3" selected>Medium</option>
+                <option value="P4">Low</option>
+            </select>
+        </div>
 
-    <button class="btn btn-success">
-        Submit Incident
-    </button>
+        <div class="mb-3">
+            <label>Status</label>
+            <select name="status" class="form-control">
+                <option value="OPEN">Open</option>
+                <option value="RESOLVED">Resolved</option>
+            </select>
+        </div>
 
-</form>
+        <button class="btn btn-primary">Submit</button>
+    </form>
+</div>
 
 {% endblock %}
