@@ -10,14 +10,17 @@ class Incident(models.Model):
     ]
 
     STATUS_CHOICES = [
-        ('OPEN', 'Open'),
-        ('RESOLVED', 'Resolved'),
+    ('Open', 'Open'),
+    ('In Progress', 'In Progress'),
+    ('On Hold', 'On Hold'),
+    ('Resolved', 'Resolved'),
     ]
+
 
     title = models.CharField(max_length=200)
     description = models.TextField()
     priority = models.CharField(max_length=2, choices=PRIORITY_CHOICES, default='P3')
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='OPEN')
+    status = models.CharField(max_length=25, choices=STATUS_CHOICES, default='OPEN')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
