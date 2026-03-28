@@ -3,7 +3,7 @@ from .models import Incident
 
 # DASHBOARD
 def index(request):
-    incidents = Incident.objects.all().order_by('-id')
+    incidents = Incident.objects.all().order_by('-created_at')
 
     # ✅ COUNTS (IMPORTANT)
     p1_count = Incident.objects.filter(priority='Critical').count()
