@@ -20,6 +20,7 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            script: |
             set -e
 
             cd ~/projects/incident-system
@@ -31,7 +32,14 @@ jobs:
 
             pip install -r requirements.txt
 
-            python manage.py makemigrations --merge --noinput
+            # 🔥 CLEAN OLD MIGRATIONS (IMPORTANT)
+            find incidents/migrations -type f ! -name "__init__.py" -delete
+
+            # 🔥 REMOVE OLD DATABASE (ONLY SQLITE)
+            rm -f db.sqlite3
+
+            # 🔥 RECREATE CLEAN DB
+            python manage.py makemigrations
             python manage.py migrate
 
             python manage.py collectstatic --noinput
