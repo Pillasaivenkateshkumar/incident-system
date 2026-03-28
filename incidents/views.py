@@ -1,22 +1,28 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Incident
 
-
+# DASHBOARD
 def index(request):
-    incidents = Incident.objects.all().order_by('-created_at')
+    incidents = Incident.objects.all().order_by('-id')
 
-    context = {
+    # ✅ COUNTS (IMPORTANT)
+    p1_count = Incident.objects.filter(priority='Critical').count()
+    p2_count = Incident.objects.filter(priority='High').count()
+    p3_count = Incident.objects.filter(priority='Medium').count()
+    p4_count = Incident.objects.filter(priority='Low').count()
+    resolved_count = Incident.objects.filter(status='Resolved').count()
+
+    return render(request, 'incidents/index.html', {
         'incidents': incidents,
-        'p1': incidents.filter(priority='P1').count(),
-        'p2': incidents.filter(priority='P2').count(),
-        'p3': incidents.filter(priority='P3').count(),
-        'p4': incidents.filter(priority='P4').count(),
-        'resolved': incidents.filter(status='RESOLVED').count(),
-    }
-
-    return render(request, 'incidents/index.html', context)
+        'p1_count': p1_count,
+        'p2_count': p2_count,
+        'p3_count': p3_count,
+        'p4_count': p4_count,
+        'resolved_count': resolved_count,
+    })
 
 
+# CREATE
 def create_incident(request):
     if request.method == 'POST':
         Incident.objects.create(
@@ -30,6 +36,7 @@ def create_incident(request):
     return render(request, 'incidents/create.html')
 
 
+# UPDATE
 def update_incident(request, id):
     incident = get_object_or_404(Incident, id=id)
 
@@ -44,6 +51,7 @@ def update_incident(request, id):
     return render(request, 'incidents/update.html', {'incident': incident})
 
 
+# DELETE
 def delete_incident(request, id):
     incident = get_object_or_404(Incident, id=id)
 

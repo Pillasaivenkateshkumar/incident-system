@@ -18,20 +18,21 @@
 
 <!-- INCIDENT LIST -->
 {% for incident in incidents %}
-<div class="card mb-4 shadow-sm">
-
+<div class="card mb-3 shadow-sm border-0">
     <div class="card-body">
 
-        <!-- TITLE -->
-        <h4 class="fw-bold">{{ incident.title }}</h4>
+        <!-- HEADER -->
+        <div class="d-flex justify-content-between align-items-start">
+            <div>
+                <h5 class="fw-bold mb-1">{{ incident.title }}</h5>
+                <p class="text-muted small mb-2">
+                    {{ incident.description }}
+                </p>
+            </div>
+        </div>
 
-        <!-- DESCRIPTION -->
-        <p class="text-muted mb-3">
-            {{ incident.description }}
-        </p>
-
-        <!-- BADGES -->
-        <div class="mb-3">
+        <!-- TAGS -->
+        <div class="d-flex gap-2 mb-3">
 
             <!-- PRIORITY -->
             {% if incident.priority == 'Critical' %}
@@ -57,17 +58,14 @@
 
         </div>
 
-        <!-- ACTION BUTTONS -->
-        <div>
-            <a href="{% url 'update' incident.id %}" class="btn btn-warning btn-sm">Edit</a>
-            <a href="{% url 'delete' incident.id %}" class="btn btn-danger btn-sm">Delete</a>
+        <!-- ACTIONS -->
+        <div class="d-flex justify-content-end gap-2">
+            <a href="{% url 'update' incident.id %}" class="btn btn-outline-warning btn-sm">Edit</a>
+            <a href="{% url 'delete' incident.id %}" class="btn btn-outline-danger btn-sm">Delete</a>
         </div>
 
     </div>
-
 </div>
 {% empty %}
-    <p>No incidents found.</p>
+<p>No incidents found.</p>
 {% endfor %}
-
-{% endblock %}
