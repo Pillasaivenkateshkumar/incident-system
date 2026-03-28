@@ -49,11 +49,15 @@ def update_incident(request, id):
     incident = get_object_or_404(Incident, id=id)
 
     if request.method == 'POST':
-        incident.title = request.POST['title']
-        incident.description = request.POST['description']
-        incident.priority = request.POST['priority']
-        incident.status = request.POST['status']
+        incident.title = request.POST.get('title')
+        incident.description = request.POST.get('description')
+        incident.priority = request.POST.get('priority')   # ✅ IMPORTANT
+        incident.status = request.POST.get('status')       # ✅ IMPORTANT
+
+        print("UPDATED PRIORITY:", incident.priority)  # debug
+
         incident.save()
+
         return redirect('index')
 
     return render(request, 'incidents/update.html', {'incident': incident})
