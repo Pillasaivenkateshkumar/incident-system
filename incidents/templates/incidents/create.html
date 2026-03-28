@@ -9,11 +9,12 @@
     <input type="text" name="title" placeholder="Title" class="form-control mb-2" required>
     <textarea name="description" placeholder="Description" class="form-control mb-2" required></textarea>
 
-    <select name="priority" class="form-control mb-2">
-        <option value="P1">Critical</option>
-        <option value="P2">High</option>
-        <option value="P3">Medium</option>
-        <option value="P4">Low</option>
+    <select name="priority" class="form-select mb-3" required>
+        <option value="" disabled selected>Select Priority</option>
+        <option value="Critical">P1 - Critical</option>
+        <option value="High">P2 - High</option>
+        <option value="Medium">P3 - Medium</option>
+        <option value="Low">P4 - Low</option>
     </select>
 
     <select name="status" class="form-select mb-3">

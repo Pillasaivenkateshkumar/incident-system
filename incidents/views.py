@@ -25,12 +25,20 @@ def index(request):
 # CREATE
 def create_incident(request):
     if request.method == 'POST':
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        priority = request.POST.get('priority')  # 🔥 IMPORTANT
+        status = request.POST.get('status')
+
+        print("DEBUG PRIORITY:", priority)  # 👈 TEMP DEBUG
+
         Incident.objects.create(
-            title=request.POST['title'],
-            description=request.POST['description'],
-            priority=request.POST['priority'],
-            status=request.POST['status']
+            title=title,
+            description=description,
+            priority=priority,
+            status=status
         )
+
         return redirect('index')
 
     return render(request, 'incidents/create.html')
