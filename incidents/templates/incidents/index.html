@@ -17,58 +17,64 @@
 </div>
 
 <!-- INCIDENT LIST -->
-{% for incident in incidents %}
-<div class="card mb-3 shadow-sm border-0">
+<div class="card shadow-sm mt-4">
     <div class="card-body">
 
-        <!-- HEADER -->
-        <div class="d-flex justify-content-between align-items-start">
-            <div>
-                <h5 class="fw-bold">{{ incident.title }}</h5>
-                <p class="text-muted mb-2">{{ incident.description }}</p>
-                    <span class="badge bg-primary">{{ incident.get_priority_display }}</span>
-                    <span class="badge bg-secondary">{{ incident.status }}</span>
-                </p>
-            </div>
-        </div>
+        <h5 class="mb-3">Incident List</h5>
 
-        <!-- TAGS -->
-        <div class="d-flex gap-2 mb-3">
+        <table class="table table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
 
-            <!-- PRIORITY -->
-            {% if incident.priority == 'Critical' %}
-                <span class="badge bg-danger">P1 - Critical</span>
-            {% elif incident.priority == 'High' %}
-                <span class="badge bg-warning text-dark">P2 - High</span>
-            {% elif incident.priority == 'Medium' %}
-                <span class="badge bg-warning text-dark">P3 - Medium</span>
-            {% else %}
-                <span class="badge bg-primary">P4 - Low</span>
-            {% endif %}
+            <tbody>
+                {% for incident in incidents %}
+                <tr>
+                    <td><strong>{{ incident.title }}</strong></td>
 
-            <!-- STATUS -->
-            {% if incident.status == 'Open' %}
-                <span class="badge bg-secondary">Open</span>
-            {% elif incident.status == 'In Progress' %}
-                <span class="badge bg-info text-dark">In Progress</span>
-            {% elif incident.status == 'On Hold' %}
-                <span class="badge bg-dark">On Hold</span>
-            {% else %}
-                <span class="badge bg-success">Resolved</span>
-            {% endif %}
+                    <td>{{ incident.description }}</td>
 
-        </div>
+                    <td>
+                        <span class="badge 
+                            {% if incident.priority == 'Critical' %}bg-danger
+                            {% elif incident.priority == 'High' %}bg-warning text-dark
+                            {% elif incident.priority == 'Medium' %}bg-info text-dark
+                            {% else %}bg-primary
+                            {% endif %}
+                        ">
+                            {{ incident.get_priority_display }}
+                        </span>
+                    </td>
 
-        <!-- ACTIONS -->
-        <div class="d-flex justify-content-end gap-2">
-            <a href="{% url 'update' incident.id %}" class="btn btn-outline-warning btn-sm">Edit</a>
-            <a href="{% url 'delete' incident.id %}" class="btn btn-outline-danger btn-sm">Delete</a>
-        </div>
+                    <td>
+                        <span class="badge 
+                            {% if incident.status == 'Resolved' %}bg-success
+                            {% elif incident.status == 'In Progress' %}bg-warning text-dark
+                            {% elif incident.status == 'On Hold' %}bg-secondary
+                            {% else %}bg-dark
+                            {% endif %}
+                        ">
+                            {{ incident.status }}
+                        </span>
+                    </td>
+
+                    <td>
+                        <a href="{% url 'update' incident.id %}" class="btn btn-sm btn-warning">Edit</a>
+                        <a href="{% url 'delete' incident.id %}" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
 
     </div>
 </div>
-{% empty %}
-<p>No incidents found.</p>
-{% endfor %}
 
 {% endblock %}
