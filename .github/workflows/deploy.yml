@@ -66,14 +66,6 @@ jobs:
 
             pip install -r requirements.txt
 
-            # 🔥 CLEAN OLD MIGRATIONS (IMPORTANT)
-            find incidents/migrations -type f ! -name "__init__.py" -delete
-
-            # 🔥 REMOVE OLD DATABASE (ONLY SQLITE)
-            rm -f db.sqlite3
-
-            # 🔥 RECREATE CLEAN DB
-            python manage.py makemigrations
             python manage.py migrate
 
             python manage.py collectstatic --noinput
