@@ -1,4 +1,4 @@
-name: Deploy Django to EC2
+name: CI/CD Django Deployment
 
 on:
   push:
@@ -6,43 +6,66 @@ on:
       - main
 
 jobs:
-  deploy:
+
+  # ---------------------------
+  # 🟢 CI JOB (VALIDATION)
+  # ---------------------------
+  ci:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Deploy to EC2 via SSH
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            script: |
-            set -e
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.9'
 
-            cd ~/projects/incident-system
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+        pip install flake8 bandit
 
-            git reset --hard
-            git pull origin main
+    - name: Run Flake8 (Code Quality)
+      run: |
+        flake8 . --exclude=venv,migrations --max-line-length=120
 
-            source venv/bin/activate
+    - name: Run Bandit (Security Scan)
+      run: |
+        bandit -r . -x venv,migrations
 
-            pip install -r requirements.txt
+    - name: Django System Check
+      run: |
+        python manage.py check
 
-            # 🔥 CLEAN OLD MIGRATIONS (IMPORTANT)
-            find incidents/migrations -type f ! -name "__init__.py" -delete
+  # ---------------------------
+  # 🔵 CD JOB (DEPLOYMENT)
+  # ---------------------------
+  deploy:
+    needs: ci   # 👈 IMPORTANT (runs only if CI passes)
+    runs-on: ubuntu-latest
 
-            # 🔥 REMOVE OLD DATABASE (ONLY SQLITE)
-            rm -f db.sqlite3
+    steps:
+    - name: Deploy to EC2 via SSH
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ubuntu
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          set -e
+          cd ~/projects/incident-system
 
-            # 🔥 RECREATE CLEAN DB
-            python manage.py makemigrations
-            python manage.py migrate
+          git reset --hard
+          git pull origin main
 
-            python manage.py collectstatic --noinput
+          source venv/bin/activate
 
-            sudo systemctl restart gunicorn
-            sudo systemctl restart nginx
+          pip install -r requirements.txt
+
+          python manage.py migrate
+          python manage.py collectstatic --noinput
+
+          sudo systemctl restart gunicorn
+          sudo systemctl restart nginx
